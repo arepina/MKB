@@ -43,6 +43,7 @@ dependencies {
     tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
         exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
     }
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version:'3.0.1'
 }
 
 // context where tomcat is deployed, by defautl localhost:8080/
