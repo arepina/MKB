@@ -1,5 +1,7 @@
 package main.webapp;
 
+import main.Server;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,13 +16,16 @@ public class Servlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String N = request.getParameter("N");
-        String M = request.getParameter("M");
+        int N = Integer.parseInt(request.getParameter("N"));
+        int M = Integer.parseInt(request.getParameter("M"));
         String file = request.getParameter("fileName");
-        Double T = Double.parseDouble(request.getParameter("T"));
+        int T = Integer.parseInt(request.getParameter("T"));
         String server = request.getParameter("server");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+
+        //Server s = new Server(N, M);
+
 
         response.getWriter().println("<html>");
         response.getWriter().println("<head>");
