@@ -18,14 +18,16 @@ public class Servlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int N = Integer.parseInt(request.getParameter("N"));
         int M = Integer.parseInt(request.getParameter("M"));
-        String file = request.getParameter("fileName");
+        String fileName = request.getParameter("fileName");
         int T = Integer.parseInt(request.getParameter("T"));
-        String server = request.getParameter("server");
-        String username = request.getParameter("username");
+        String serverName = request.getParameter("server");
+        int port = Integer.parseInt(request.getParameter("port"));
+        String sid = request.getParameter("sid");
+        String userName = request.getParameter("username");
         String password = request.getParameter("password");
 
-        //Server s = new Server(N, M);
-
+        Server s = new Server(N, M, fileName, T, serverName, port, sid, userName, password);
+        s.runThreads(); //run threads
 
         response.getWriter().println("<html>");
         response.getWriter().println("<head>");

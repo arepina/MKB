@@ -2,11 +2,13 @@
 <head><title>MKB Test task</title></head>
 <body>
 <form action="servlet1" method="get">
-    N : <input type="number" name="N"><br>
-    M : <input type="number" name="M"><br>
-    file : <input type="file" name="fileName"><br>
-    T : <input type="number" name="T"><br>
-    server : <input type="text" name="server"><br>
+    N (threads number) : <input type="number" name="N"><br>
+    M (iterations number) : <input type="number" name="M"><br>
+    file (name of file on server) : <input type="text" name="fileName"><br>
+    T (pause between threads in ms) : <input type="number" name="T"><br>
+    server : <input type="text" name="server" value="localhost"><br>
+    port : <input type="number" name="port" value="1234"><br>
+    sid : <input type="text" name="sid" value="SE"><br>
     username : <input type="text" name="username"><br>
     password : <input type="password" name="password"><br>
     <input type="submit" value="Run!">

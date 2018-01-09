@@ -1,86 +1,50 @@
 package main;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URL;
+
+import static java.lang.Thread.sleep;
 
 public class Server {
-    public Server(int n, int m, File file, int T, String serverName, String username, String password) {
+
+    private int N, M, T, port;
+    private String fileName, serverName, sid, userName, password;
+
+    static int numberOfOnline; //active clients number
+
+    public Server(int N, int M, String fileName, int T, String serverName, int port, String sid, String username, String password) {
+        this.N = N;
+        this.M = M;
+        this.T = T;
+        this.fileName = fileName;
+        this.serverName = serverName;
+        this.port = port;
+        this.sid = sid;
+        this.userName = username;
+        this.password = password;
+    }
+
+    public void runThreads() {
         try {
-            Socket client = null;
-            try (ServerSocket server = new ServerSocket(8080)) {
+            try (ServerSocket server = new ServerSocket(port)) {
+                Socket client = server.accept();
                 System.out.println("Waiting...");
                 numberOfOnline = 0;
                 // wait for clients, create new thread for each
-                while (true) {
-                    client = server.accept(); // wait for connection
+                for (int i = 0; i < N; i++) {
                     numberOfOnline++;
-                    System.out.println("One more client has been connected");
                     System.out.println("There are " + Server.numberOfOnline + " clients online");
-                    Runnable r = new ThreadEchoHandler(client);
+                    Runnable r = new ThreadHandler(client, M, fileName, serverName, port, sid, userName, password);
                     Thread t = new Thread(r);
                     t.start();
+                    Thread.sleep(T); // pause between threads
                 }
-            } finally {
-                if (client != null) {
-                    client.close();
-                }
-
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    static int numberOfOnline; //active clients number
 }
-
-
-class ThreadEchoHandler implements Runnable {
-    ThreadEchoHandler(Socket st) {
-        client = st;
-    }
-
-    public void run() {
-        try {
-            // create server's input stream
-            InputStream inStream = client.getInputStream();
-            BufferedReader inputLine = new BufferedReader(new InputStreamReader(inStream));
-            String stringFromClient = inputLine.readLine(); //Строка, полученная от клиента
-            System.out.println(stringFromClient);
-
-            // create server's output stream
-            OutputStream outStream = client.getOutputStream();
-            PrintWriter out = new PrintWriter(outStream, true);
-            // get the webpage data and send response to client
-            try {
-                URL url = new URL(stringFromClient);
-                LineNumberReader lineReader = new LineNumberReader(new
-                        InputStreamReader(url.openStream()));
-
-                String s = lineReader.readLine(); // read page
-                // send lines to client
-                while (s != null) {
-                    out.println(s);
-                    s = lineReader.readLine();
-                }
-
-                lineReader.close();
-            } catch (MalformedURLException e) {
-                out.println("Malformed URL");
-            } catch (IOException e) {
-                out.println("Probably this page does not exist");
-            }
-            client.close();
-            Server.numberOfOnline--;
-            System.out.println("There are " + Server.numberOfOnline + " clients online");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private Socket client;
-}
-
