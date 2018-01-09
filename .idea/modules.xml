@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MKB.iml" filepath="$PROJECT_DIR$/.idea/modules/MKB.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MKB_main.iml" filepath="$PROJECT_DIR$/.idea/modules/MKB_main.iml" group="MKB" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MKB_test.iml" filepath="$PROJECT_DIR$/.idea/modules/MKB_test.iml" group="MKB" />
+    </modules>
+  </component>
+</project>
