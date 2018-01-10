@@ -14,10 +14,12 @@ public class ThreadHandler implements Runnable {
 
     private int M, port;
     private String fileName, serverName, sid, userName, password;
+    private Server server;
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-    ThreadHandler(int M, String fileName, String serverName, int port, String sid, String userName, String password) {
+    ThreadHandler(Server server, int M, String fileName, String serverName, int port, String sid, String userName, String password) {
+        this.server = server;
         this.M = M;
         this.fileName = fileName;
         this.serverName = serverName;
@@ -118,8 +120,10 @@ public class ThreadHandler implements Runnable {
 
     public void run() {
         System.out.println("Started");
-        if(!connect())
+        if(!connect()) {
+            server.setResult(false);
             throw new IllegalStateException("There was an error during jdbc connection in one of the threads");
-        System.out.println("Done");
+        }
+        server.setResult(true);
     }
 }
