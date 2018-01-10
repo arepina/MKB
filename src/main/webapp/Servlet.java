@@ -27,7 +27,7 @@ public class Servlet extends HttpServlet {
         String password = request.getParameter("password");
 
         Server s = new Server(N, M, fileName, T, serverName, port, sid, userName, password);
-        Long [] result = s.runThreads(); //run threads
+        Long[] result = s.runThreads(); //run threads
 
         response.getWriter().println("<html>");
         response.getWriter().println("<head>");
@@ -35,7 +35,9 @@ public class Servlet extends HttpServlet {
         response.getWriter().println("</head>");
         response.getWriter().println("<body>");
         response.getWriter().println("Duration: " + result[0] + " ms");
-        response.getWriter().println("Successful operations:"  + result[1]);
+        response.getWriter().println("<br>");
+        response.getWriter().println("Successful operations: " + result[1]);
+        response.getWriter().println("<br>");
         response.getWriter().println("Failed operations: " + result[2]);
         response.getWriter().println("</body>");
         response.getWriter().println("</html>");

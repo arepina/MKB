@@ -18,7 +18,7 @@ class Logs {
         }
 
         logger.setLevel(Level.INFO);
-        FileHandler fileHTML = new FileHandler("Logging.html", true);
+        FileHandler fileHTML = new FileHandler("logs/Logging.html", true);
 
         // create an HTML formatter
         Formatter formatterHTML = new HtmlFormatter();
