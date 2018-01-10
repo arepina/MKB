@@ -10,10 +10,10 @@ public class Test {
         String fileName = "test.txt";
         int T = 1000;
         String serverName = "localhost";
-        int port = 1234;
-        String sid = "SE";
-        String userName = "a";
-        String password = "123456";
+        int port = 1521;
+        String sid = "XE";
+        String userName = "admin";
+        String password = "admin";
 
         Server s = new Server(N, M, fileName, T, serverName, port, sid, userName, password);
         s.runThreads(); //run threads

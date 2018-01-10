@@ -34,7 +34,9 @@ public class Servlet extends HttpServlet {
         response.getWriter().println("<title>Job done</title>");
         response.getWriter().println("</head>");
         response.getWriter().println("<body>");
-        response.getWriter().println("Go to logs");
+        response.getWriter().println("Duration:");
+        response.getWriter().println("Successful operations:");
+        response.getWriter().println("Failed operations:");
         response.getWriter().println("</body>");
         response.getWriter().println("</html>");
     }

@@ -2,10 +2,11 @@ package main;
 
 
 import java.io.*;
-import java.net.Socket;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static jdk.nashorn.internal.parser.TokenType.EOL;
 
@@ -13,9 +14,10 @@ public class ThreadHandler implements Runnable {
 
     private int M, port;
     private String fileName, serverName, sid, userName, password;
-    private Socket clientSocket;
 
-    ThreadHandler(Socket client, int M, String fileName, String serverName, int port, String sid, String userName, String password) {
+    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
+    ThreadHandler(int M, String fileName, String serverName, int port, String sid, String userName, String password) {
         this.M = M;
         this.fileName = fileName;
         this.serverName = serverName;
@@ -23,7 +25,6 @@ public class ThreadHandler implements Runnable {
         this.sid = sid;
         this.userName = userName;
         this.password = password;
-        this.clientSocket = client;
     }
 
     private String readFile() throws IOException {
@@ -51,9 +52,16 @@ public class ThreadHandler implements Runnable {
 
     private boolean connect() {
         try {
+            Logs.setup();
+            LOGGER.setLevel(Level.INFO);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Problems with creating the log files");
+        }
+        try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
         } catch (ClassNotFoundException e) {
-            System.out.println("Oracle JDBC Driver is not found");
+            LOGGER.severe("Oracle JDBC Driver is not found");
             e.printStackTrace();
             return false;
         }
@@ -63,9 +71,11 @@ public class ThreadHandler implements Runnable {
         Statement statement;
         try {
             connection = DriverManager.getConnection(url, userName, password);
+            LOGGER.info("Connection succeed");
             statement = connection.createStatement();
         } catch (SQLException e) {
-            System.out.println("Connection Failed : " + e.getMessage());
+            e.printStackTrace();
+            LOGGER.severe("Connection Failed");
             return false;
         }
         try {
@@ -75,46 +85,41 @@ public class ThreadHandler implements Runnable {
             {
                 for(String query : parsedCommands) {
                     boolean status = statement.execute(query);
+                    LOGGER.info("Iteration:" + i + " Status: " + status);
                     if (status) {
                         // query is a select query
                         ResultSet rs = statement.getResultSet();
                         while (rs.next()) {
-                            System.out.println(rs.getString(1));
+                            LOGGER.info(rs.getString(1));
                         }
                         rs.close();
                     } else {
                         // query can be update or any query apart from select query
                         int count = statement.getUpdateCount();
-                        System.out.println("Total records updated: " + count);
+                        LOGGER.info("Total records updated: " + count);
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
+            LOGGER.severe("IOException | SQLException");
             return false;
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         try {
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            LOGGER.severe("SQLException on connection close");
             return false;
         }
+        LOGGER.info("Successful");
         return true;
     }
 
     public void run() {
-        try {
-            InputStream input  = clientSocket.getInputStream();
-            OutputStream output = clientSocket.getOutputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println("Started");
         if(!connect())
             throw new IllegalStateException("There was an error during jdbc connection in one of the threads");
-        Server.numberOfOnline--;
-        System.out.println("There are " + Server.numberOfOnline + " clients online");
+        System.out.println("Done");
     }
-
 }
