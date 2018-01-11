@@ -26,9 +26,8 @@ public class Server {
         long start = System.currentTimeMillis();
         try {
             try (ServerSocket server = new ServerSocket(port)) {
-                System.out.println("Waiting...");
                 for (int i = 0; i < N; i++) {
-                    Runnable r = new ThreadHandler(this, M, fileName, serverName, port, dbname, userName, password);
+                    Runnable r = new ThreadHandler(this, M, fileName, serverName, port, dbname, userName, password, i);
                     Thread t = new Thread(r);
                     t.start();
                     Thread.sleep(T); // pause between threads
