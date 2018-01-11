@@ -5,6 +5,7 @@ import java.io.*;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,27 +30,23 @@ public class ThreadHandler implements Runnable {
         this.password = password;
     }
 
-    private String readFile() throws IOException {
-        BufferedReader br = null;
-        FileReader fr = null;
-        StringBuilder sb = new StringBuilder();
+    private String readFile() {
+        StringBuilder result = new StringBuilder("");
         try {
-            fr = new FileReader(fileName);
-            br = new BufferedReader(fr);
-            String nextLine = "";
-            while ((nextLine = br.readLine()) != null) {
-                sb.append(nextLine); // BufferedReader strips the EOL character
-                // so we add a new one
-                sb.append(EOL);
+            ClassLoader classLoader = getClass().getClassLoader();
+            File file = new File(classLoader.getResource(fileName).getFile());
+            try (Scanner scanner = new Scanner(file)) {
+
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    result.append(line.replace("\\n\\n", ""));
+                }
+                scanner.close();
             }
-            return sb.toString();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (br != null) br.close();
-            if (fr != null) fr.close();
         }
-        return sb.toString();
+        return result.toString();
     }
 
     private boolean connect() {
@@ -63,7 +60,7 @@ public class ThreadHandler implements Runnable {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            LOGGER.severe("Oracle JDBC Driver is not found");
+            LOGGER.severe("MySql JDBC Driver is not found");
             e.printStackTrace();
             return false;
         }
@@ -82,10 +79,10 @@ public class ThreadHandler implements Runnable {
         }
         try {
             String allCommands = readFile();
-            List<String> parsedCommands= Arrays.asList(allCommands.split("\\n/\\n"));
-            for(int i = 0; i < M; i++) // execute the queries M times
+            List<String> parsedCommands = Arrays.asList(allCommands.split(";"));
+            for (int i = 0; i < M; i++) // execute the queries M times
             {
-                for(String query : parsedCommands) {
+                for (String query : parsedCommands) {
                     boolean status = statement.execute(query);
                     LOGGER.info("Iteration:" + i + " Status: " + status);
                     if (status) {
@@ -102,9 +99,9 @@ public class ThreadHandler implements Runnable {
                     }
                 }
             }
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-            LOGGER.severe("IOException | SQLException");
+            LOGGER.severe("SQLException on operations execution");
             return false;
         }
         try {
@@ -120,10 +117,11 @@ public class ThreadHandler implements Runnable {
 
     public void run() {
         System.out.println("Started");
-        if(!connect()) {
+        if (!connect()) {
             server.setResult(false);
             throw new IllegalStateException("There was an error during jdbc connection in one of the threads");
         }
         server.setResult(true);
+        System.out.println("Finished");
     }
 }

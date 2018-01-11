@@ -7,7 +7,7 @@ public class Test {
     {
         int N = 3;
         int M = 3;
-        String fileName = "test.sql";
+        String fileName = "test.txt";
         int T = 1000;
         String serverName = "localhost";
         int port = 3306;

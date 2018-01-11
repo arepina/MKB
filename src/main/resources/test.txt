@@ -1,0 +1,3 @@
+SELECT * FROM users;\n\n
+SELECT * FROM users WHERE age > 30;\n\n
+SELECT * FROM users WHERE name = 'daria';\n\n
