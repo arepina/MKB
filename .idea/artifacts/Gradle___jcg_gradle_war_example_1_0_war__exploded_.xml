@@ -16,6 +16,9 @@
           <element id="module-output" name="MKB_main" />
           <element id="dir-copy" path="$PROJECT_DIR$/build/resources/main" />
         </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Gradle: mysql:mysql-connector-java:5.1.6" />
+        </element>
       </element>
     </root>
   </artifact>

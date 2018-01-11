@@ -7,15 +7,15 @@ public class Test {
     {
         int N = 3;
         int M = 3;
-        String fileName = "test.txt";
+        String fileName = "test.sql";
         int T = 1000;
         String serverName = "localhost";
-        int port = 1521;
-        String sid = "XE";
-        String userName = "admin";
-        String password = "admin";
+        int port = 3306;
+        String dbname = "MKB";
+        String userName = "root";
+        String password = "root";
 
-        Server s = new Server(N, M, fileName, T, serverName, port, sid, userName, password);
+        Server s = new Server(N, M, fileName, T, serverName, port, dbname, userName, password);
         s.runThreads(); //run threads
     }
 }

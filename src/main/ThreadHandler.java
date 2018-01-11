@@ -13,18 +13,18 @@ import static jdk.nashorn.internal.parser.TokenType.EOL;
 public class ThreadHandler implements Runnable {
 
     private int M, port;
-    private String fileName, serverName, sid, userName, password;
+    private String fileName, serverName, dbname, userName, password;
     private Server server;
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-    ThreadHandler(Server server, int M, String fileName, String serverName, int port, String sid, String userName, String password) {
+    ThreadHandler(Server server, int M, String fileName, String serverName, int port, String dbname, String userName, String password) {
         this.server = server;
         this.M = M;
         this.fileName = fileName;
         this.serverName = serverName;
         this.port = port;
-        this.sid = sid;
+        this.dbname = dbname;
         this.userName = userName;
         this.password = password;
     }
@@ -61,13 +61,13 @@ public class ThreadHandler implements Runnable {
             throw new RuntimeException("Problems with creating the log files");
         }
         try {
-            Class.forName("oracle.jdbc.driver.OracleDriver");
+            Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             LOGGER.severe("Oracle JDBC Driver is not found");
             e.printStackTrace();
             return false;
         }
-        String url = String.format("jdbc:oracle:thin:@%s:%d:%s", serverName, port, sid);
+        String url = String.format("jdbc:mysql://%s:%d/%s", serverName, port, dbname);
 
         Connection connection;
         Statement statement;
