@@ -22,11 +22,11 @@ public class Servlet extends HttpServlet {
         int T = Integer.parseInt(request.getParameter("T"));
         String serverName = request.getParameter("server");
         int port = Integer.parseInt(request.getParameter("port"));
-        String sid = request.getParameter("sid");
+        String dbname = request.getParameter("dbname");
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
 
-        Server s = new Server(N, M, fileName, T, serverName, port, sid, userName, password);
+        Server s = new Server(N, M, fileName, T, serverName, port, dbname, userName, password);
         Long[] result = s.runThreads(); //run threads
 
         response.getWriter().println("<html>");
